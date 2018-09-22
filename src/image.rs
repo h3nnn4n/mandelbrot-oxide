@@ -15,17 +15,47 @@ pub fn write_bytes(outfile_name: &String, buf: &Vec<u8>, width: u32, height: u32
     writer.write_image_data(&buf).unwrap();
 }
 
-pub fn normalize(bytes: &mut Vec<u8>) -> (Vec<u8>) {
-    fn norm(x: u8, m: u8) -> (u8) {
-        let x2 = x as f64;
-        let m2 = m as f64;
+pub fn read_bytes(infile_name: &String) -> (Vec<u8>, u32, u32) {
+    let decoder = png::Decoder::new(::std::fs::File::open(infile_name).unwrap());
+    let (info, mut reader) = decoder.read_info().unwrap();
+    let mut buf = vec![0; info.buffer_size()];
 
-        let r = (x2 / m2) * 255.0;
+    reader.next_frame(&mut buf).unwrap();
 
-        r as u8
+    if info.color_type != png::ColorType::RGB || info.bit_depth != png::BitDepth::Eight {
+        println!("Not my kind of PNG!");
+        ::std::process::exit(1);
     }
 
-    let m = bytes.iter().max().unwrap();
+    return (buf, info.width, info.height);
+}
 
-    bytes.iter().map(|x| norm(*x, *m)).collect()
+pub fn normalize(vec: &mut Vec<u32>) -> (Vec<f32>) {
+    fn norm(x: u32, m: u32) -> (f32) {
+        (x as f32) / (m as f32)
+    }
+
+    let m = vec.iter().max().unwrap();
+
+    vec.iter().map(|x| norm(*x, *m)).collect()
+}
+
+pub fn apply_palette(vec: Vec<f32>, palette: Vec<(u8, u8, u8)>) -> (Vec<u8>) {
+    fn get_index(i: f32) -> (usize) {
+        (i * 255.0) as usize
+    }
+
+    let mut image = Vec::new();
+
+    for i in 0..vec.len() {
+        let index = get_index(vec[i]);
+
+        let color = palette[index];
+
+        image.push(color.0);
+        image.push(color.1);
+        image.push(color.2);
+    }
+
+    image
 }

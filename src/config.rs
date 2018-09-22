@@ -19,13 +19,13 @@ impl Config {
             xcenter: -0.74364085,
             ycenter: 0.13182733,
 
-            zoom: 0.00012068,
+            zoom: 0.00012068 / 8.0,
 
             width: 800,
             height: 600,
 
             escape_radius: 2.0,
-            iterations: 512,
+            iterations: 1024,
         }
     }
 }

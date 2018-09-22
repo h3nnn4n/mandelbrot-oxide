@@ -14,14 +14,14 @@ pub fn get_c(x: u32, y: u32, config: Config) -> (Complex<f64>) {
     Complex { re: real, im: imag }
 }
 
-pub fn mandelbrot(c: Complex<f64>, escape_radius: f64, iterations: u32) -> (u8) {
+pub fn mandelbrot_point(c: Complex<f64>, escape_radius: f64, iterations: u32) -> (u32) {
     let mut z = c.clone();
 
     for i in 0..iterations {
         z = z.powf(2.0) + c;
 
         if z.norm() > escape_radius {
-            return i as u8;
+            return i;
         }
     }
 
