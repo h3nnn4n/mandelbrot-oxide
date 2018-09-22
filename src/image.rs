@@ -30,7 +30,7 @@ pub fn read_bytes(infile_name: &String) -> (Vec<u8>, u32, u32) {
     return (buf, info.width, info.height);
 }
 
-pub fn normalize(vec: &mut Vec<u32>) -> (Vec<f32>) {
+pub fn normalize(vec: Vec<u32>) -> (Vec<f32>) {
     fn norm(x: u32, m: u32) -> (f32) {
         (x as f32) / (m as f32)
     }

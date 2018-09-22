@@ -14,22 +14,9 @@ fn main() {
 
     let conf = config::Config::new();
 
-    let mut mandelbrot_points: Vec<u32> = Vec::new();
+    let mandelbrot_points = mandelbrot::generate_mandelbrot(conf);
 
-    for j in 0..conf.height {
-        for i in 0..conf.width {
-            let c = mandelbrot::get_c(i, j, conf);
-            let v = mandelbrot::mandelbrot_point(c, conf.escape_radius, conf.iterations);
-
-            mandelbrot_points.push(v);
-        }
-
-        if (j + 1) % 25 == 0 {
-            println!("{:4} of {}", (j + 1), conf.height);
-        }
-    }
-
-    let normalized = image::normalize(&mut mandelbrot_points);
+    let normalized = image::normalize(mandelbrot_points);
 
     let color_image = image::apply_palette(normalized, palette);
 

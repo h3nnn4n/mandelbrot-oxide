@@ -2,6 +2,25 @@ extern crate num;
 use config::Config;
 use num::complex::Complex;
 
+pub fn generate_mandelbrot(config: Config) -> (Vec<u32>) {
+    let mut mandelbrot_points: Vec<u32> = Vec::new();
+
+    for j in 0..config.height {
+        for i in 0..config.width {
+            let c = get_c(i, j, config);
+            let v = mandelbrot_point(c, config.escape_radius, config.iterations);
+
+            mandelbrot_points.push(v);
+        }
+
+        if (j + 1) % 25 == 0 {
+            println!("{:4} of {}", (j + 1), config.height);
+        }
+    }
+
+    mandelbrot_points
+}
+
 pub fn get_c(x: u32, y: u32, config: Config) -> (Complex<f64>) {
     let minx = config.xcenter + config.zoom;
     let maxx = config.xcenter - config.zoom;
