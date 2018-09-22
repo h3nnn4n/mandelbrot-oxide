@@ -1,6 +1,5 @@
 extern crate num;
 extern crate png;
-use num::complex::Complex;
 
 mod config;
 mod image;
@@ -15,7 +14,7 @@ fn main() {
 
     for j in 0..conf.height {
         for i in 0..conf.width {
-            let c = mandelbrot::get_c(i, j, conf.width, conf.height);
+            let c = mandelbrot::get_c(i, j, conf);
             let v = mandelbrot::mandelbrot(c, conf.escape_radius, conf.iterations);
 
             for _ in 0..3 {
